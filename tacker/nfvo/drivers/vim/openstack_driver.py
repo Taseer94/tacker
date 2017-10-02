@@ -533,7 +533,7 @@ class NeutronClient(object):
 
     def __init__(self, auth_attr):
         auth = identity.Password(**auth_attr)
-        sess = session.Session(auth=auth)
+        sess = session.Session(auth=auth, verify=False)
         self.client = neutron_client.Client(session=sess)
 
     def flow_classifier_create(self, fc_dict):

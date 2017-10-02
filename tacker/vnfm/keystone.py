@@ -38,13 +38,13 @@ class Keystone(object):
 
     def get_version(self, base_url=None):
         try:
-            keystone_client = client.Client(auth_url=base_url)
+            keystone_client = client.Client(auth_url=base_url, verify=False)
         except exceptions.ConnectionError:
             raise
         return keystone_client.version
 
     def get_session(self, auth_plugin):
-        ses = session.Session(auth=auth_plugin)
+        ses = session.Session(auth=auth_plugin, verify=False)
         return ses
 
     def get_endpoint(self, ses, service_type, region_name=None):
