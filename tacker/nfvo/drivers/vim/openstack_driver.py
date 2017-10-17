@@ -110,9 +110,10 @@ class OpenStack_Driver(abstract_vim_driver.VimAbstractDriver,
         Initialize keystoneclient with provided authentication attributes.
         """
         auth_url = vim_obj['auth_url']
-        keystone_version = self._validate_auth_url(auth_url)
+        verify = not vim_obj['insecure']
+        keystone_version = self._validate_auth_url(auth_url, verify)
         auth_cred = self._get_auth_creds(keystone_version, vim_obj)
-        return self._initialize_keystone(keystone_version, auth_cred)
+        return self._initialize_keystone(keystone_version, verify, auth_cred)
 
     def _get_auth_creds(self, keystone_version, vim_obj):
         auth_url = vim_obj['auth_url']
@@ -145,14 +146,14 @@ class OpenStack_Driver(abstract_vim_driver.VimAbstractDriver,
 
     def _validate_auth_url(self, auth_url):
         try:
-            keystone_version = self.keystone.get_version(auth_url)
+            keystone_version = self.keystone.get_version(auth_url, verify)
         except Exception as e:
             LOG.error(_('VIM Auth URL invalid'))
             raise nfvo.VimConnectionException(message=e.message)
         return keystone_version
 
-    def _initialize_keystone(self, version, auth):
-        ks_client = self.keystone.initialize_client(version=version, **auth)
+    def _initialize_keystone(self, version, verify, auth):
+        ks_client = self.keystone.initialize_client(version=version, verify=verify, **auth)
         return ks_client
 
     def _find_regions(self, ks_client):
@@ -533,7 +534,7 @@ class NeutronClient(object):
 
     def __init__(self, auth_attr):
         auth = identity.Password(**auth_attr)
-        sess = session.Session(auth=auth)
+        sess = session.Session(auth=auth, verify=False)
         self.client = neutron_client.Client(session=sess)
 
     def flow_classifier_create(self, fc_dict):

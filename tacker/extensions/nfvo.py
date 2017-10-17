@@ -291,6 +291,12 @@ RESOURCE_ATTRIBUTE_MAP = {
             'is_visible': True,
             'default': None,
         },
+        'insecure': {
+            'allow_post': True,
+            'allow_put': True,
+            'convert_to': attr.convert_to_boolean,
+            'is_visible': False,
+        },
         'shared': {
             'allow_post': False,
             'allow_put': False,

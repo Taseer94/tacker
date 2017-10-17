@@ -36,28 +36,28 @@ class Keystone(object):
     instance such as version, session and client
     """
 
-    def get_version(self, base_url=None):
+    def get_version(self, base_url=None, verify=True):
         try:
-            keystone_client = client.Client(auth_url=base_url)
+            keystone_client = client.Client(auth_url=base_url, verify=verify)
         except exceptions.ConnectionError:
             raise
         return keystone_client.version
 
-    def get_session(self, auth_plugin):
-        ses = session.Session(auth=auth_plugin)
+    def get_session(self, auth_plugin, verify=True):
+        ses = session.Session(auth=auth_plugin, verify=verify)
         return ses
 
     def get_endpoint(self, ses, service_type, region_name=None):
         return ses.get_endpoint(service_type, region_name)
 
-    def initialize_client(self, version, **kwargs):
+    def initialize_client(self, version, verify, **kwargs):
         if version == 'v2.0':
             from keystoneclient.v2_0 import client
             auth_plugin = identity.v2.Password(**kwargs)
         else:
             from keystoneclient.v3 import client
             auth_plugin = identity.v3.Password(**kwargs)
-        ses = self.get_session(auth_plugin=auth_plugin)
+        ses = self.get_session(auth_plugin=auth_plugin, verify=verify)
         cli = client.Client(session=ses)
         return cli
 
