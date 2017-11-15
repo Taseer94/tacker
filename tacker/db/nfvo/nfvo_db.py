@@ -36,7 +36,7 @@ from tacker.plugins.common import constants
 
 VIM_ATTRIBUTES = ('id', 'type', 'tenant_id', 'name', 'description',
                   'placement_attr', 'shared', 'is_default',
-                  'created_at', 'updated_at', 'status')
+                  'created_at', 'updated_at', 'status', 'insecure')
 
 VIM_AUTH_ATTRIBUTES = ('auth_url', 'vim_project', 'password', 'auth_cred')
 
@@ -128,7 +128,8 @@ class NfvoPluginDb(nfvo.NFVOPluginBase, db_base.CommonDbMixin):
                     description=vim.get('description'),
                     placement_attr=vim.get('placement_attr'),
                     is_default=vim.get('is_default'),
-                    status=vim.get('status'))
+                    status=vim.get('status'),
+                    insecure=vim.get('insecure'))
                 context.session.add(vim_db)
                 vim_auth_db = VimAuth(
                     id=str(uuid.uuid4()),
