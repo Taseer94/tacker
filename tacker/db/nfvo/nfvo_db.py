@@ -55,6 +55,7 @@ class Vim(model_base.BASE,
     ), nullable=False)
     vim_auth = orm.relationship('VimAuth')
     status = sa.Column(sa.String(255), nullable=False)
+    insecure = sa.Column(sa.String(255), nullabe=False)
 
 
 class VimAuth(model_base.BASE, models_v1.HasId):
